@@ -1,0 +1,34 @@
+<div class="vjs-ai-agent-root" style="width: 100vw; height: 100vh; display: flex; flex-direction: column; position: relative">
+  <vjs-surface [url]="url" [viewOptions]="viewOptions" [renderOptions]="renderOptions" [modelOptions]="modelOptions">
+    <app-button-bar></app-button-bar>
+
+    <vjs-surface-popup selector=".vjs-next-step-picker">
+      <ng-template let-vertex="vertex"  let-model="model" let-surface="surface" let-hide="hide">
+        <app-next-step-popup [vertex]="vertex" [model]="model" [ui]="surface" [hide]="hide"></app-next-step-popup>
+      </ng-template>
+    </vjs-surface-popup>
+
+    <vjs-miniview></vjs-miniview>
+    <vjs-grid-background/>
+  </vjs-surface>
+
+  <div *ngIf="appService.actionBrowserOptions().isOpen" class="modal-overlay" (click)="appService.closeActionBrowser()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <app-action-browser
+        [context]="appService.actionBrowserOptions().context"
+        [onClose]="appService.closeActionBrowser.bind(appService)"
+        [onSelect]="appService.actionBrowserOptions().onSelect!">
+      </app-action-browser>
+    </div>
+  </div>
+
+  <app-workflow-inspector></app-workflow-inspector>
+
+  <app-confirm-modal
+    [isOpen]="appService.confirmOptions().isOpen"
+    [title]="appService.confirmOptions().title"
+    [message]="appService.confirmOptions().message"
+    [onConfirm]="appService.confirmOptions().onConfirm"
+    [onCancel]="appService.closeConfirm.bind(appService)">
+  </app-confirm-modal>
+</div>

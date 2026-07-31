@@ -1,0 +1,46 @@
+<div class="action-browser">
+  <div class="action-browser-header">
+    <div class="action-browser-header-title">
+      <h3>{{ title }}</h3>
+      <input type="text" placeholder="search" [(ngModel)]="searchTerm" (ngModelChange)="onSearchTermChange()"
+             class="action-browser-search"
+      />
+    </div>
+    <button class="close-button" (click)="onClose()">
+      <img src="/icons/close.svg" width="24" height="24" alt="Close" />
+    </button>
+  </div>
+  <div class="action-browser-content">
+    @for (provider of providers(); track provider.provider) {
+      {{provider.name}}
+      @if (getFilteredItems(provider).length > 0) {
+        <div class="provider-section">
+          <div class="provider-header">
+            <div class="provider-header-icon-container">
+              <img [src]="iconBase + '/' + provider.icon" [alt]="provider.provider" class="provider-header-icon" (error)="onIconError($event)" />
+            </div>
+            <h2 class="provider-name">{{ provider.provider }}</h2>
+          </div>
+          <div class="actions-grid">
+            @for (item of getFilteredItems(provider); track item.id) {
+              <div class="action-card"
+                   [class.action-card-disabled]="isExcluded(item.id)"
+                   [style.opacity]="isExcluded(item.id) ? 0.5 : 1"
+                   [style.pointerEvents]="isExcluded(item.id) ? 'none' : 'auto'"
+                   [style.filter]="isExcluded(item.id) ? 'grayscale(100%)' : 'none'"
+                   (click)="handleItemClick(item, provider)">
+                <div class="action-card-left">
+                  <img [src]="iconBase + '/' + provider.icon" [alt]="provider.provider" class="action-card-icon" (error)="onIconError($event)" />
+                </div>
+                <div class="action-card-content">
+                  <div class="action-card-name">{{ item.name }}</div>
+                  <div class="action-card-desc">{{ item.desc }}</div>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      }
+    }
+  </div>
+</div>
